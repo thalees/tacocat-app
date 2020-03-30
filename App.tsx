@@ -1,7 +1,29 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button} from 'react-native';
 import styled from 'styled-components/native';
 import {Constants} from './Constants';
+import {ReelSet} from './src/components/ReelSet';
+
+const App = () => {
+  const reel = useState(null);
+  return (
+    <>
+      <Container>
+        <PlayContainer>
+          <ReelSet ref={reel} />
+        </PlayContainer>
+        <ButtonContainer>
+          <Button
+            title="Spin"
+            onPress={() => {
+              reel.current.spin();
+            }}
+          />
+        </ButtonContainer>
+      </Container>
+    </>
+  );
+};
 
 const Container = styled.View`
   flex: 1;
@@ -18,18 +40,5 @@ const PlayContainer = styled.View`
   width: ${Constants.MAX_WIDTH};
   background-color: blue;
 `;
-
-const App = () => {
-  return (
-    <>
-      <Container>
-        <PlayContainer />
-        <ButtonContainer>
-          <Button title="Spin" onPress={() => {}} />
-        </ButtonContainer>
-      </Container>
-    </>
-  );
-};
 
 export default App;
