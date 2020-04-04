@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import React, {useState, forwardRef, useImperativeHandle, useRef} from 'react';
-import {View, Animated, StyleSheet} from 'react-native';
+import {Animated, Easing} from 'react-native';
 import {Constants} from '../../../Constants';
 import {Symbol} from '../Symbol';
 
@@ -12,42 +12,48 @@ interface ReelProps {
 
 export const Reel = forwardRef((reelProps: ReelProps, ref) => {
   const reel = useRef();
-  let currentScrollPosition = 0;
-  const value = 'AASGFJSLASSDDSASDSASDDSASD';
+  const symbolsStrings = 'SDAASDADASSDSDASDASDAASD';
+
   const [symbols, setSymbols] = useState({
-    reelSymbols: value.repeat(Constants.REELS_REPEAT).split(''),
+    reelSymbols: symbolsStrings.repeat(Constants.REELS_REPEAT).split(''),
     height: reelProps.height / Constants.SYMBOLS,
   });
+
+  let position = symbols.reelSymbols.length - Constants.SYMBOLS;
+  let currentScrollPosition = position * symbols.height * -1;
 
   const [scrollPosition, setScrollPosition] = useState(
     new Animated.Value(currentScrollPosition),
   );
-
   useImperativeHandle(ref, () => ({
     scrollByOffset(offset: number) {
-      currentScrollPosition =
-        currentScrollPosition + -1 * symbols.height * offset;
+      currentScrollPosition = currentScrollPosition + symbols.height * offset;
+      position = position - offset;
+
       Animated.timing(scrollPosition, {
         toValue: currentScrollPosition,
-        duration: 750,
+        duration: 750 + reelProps.index * 250,
         useNativeDriver: true,
-      }).start(() => {});
+        easing: Easing.inOut(Easing.exp),
+      }).start(() => {
+        position =
+          (Constants.REELS - 2) * symbolsStrings.length +
+          (position % symbolsStrings.length);
+        currentScrollPosition = position * symbols.height * -1;
+        scrollPosition.setValue(currentScrollPosition);
+      });
     },
     getSymbols() {
-      return value;
+      return symbolsStrings;
     },
   }));
 
   return (
-    <View
-      style={(styles.reel, {width: reelProps.width, height: reelProps.height})}
-      width={reelProps.width}
-      height={reelProps.height}
-      ref={reel}>
+    <Container width={reelProps.width} height={reelProps.height} ref={reel}>
       <Animated.View
         style={{
           width: reelProps.width,
-          height: value.length * symbols.height,
+          height: symbols.reelSymbols.length * symbols.height,
           transform: [
             {
               translateY: scrollPosition,
@@ -66,20 +72,12 @@ export const Reel = forwardRef((reelProps: ReelProps, ref) => {
           );
         })}
       </Animated.View>
-    </View>
+    </Container>
   );
 });
 
-// const Container = styled.View<{width: number; height: number}>`
-//   background-color: pink;
-//   overflow: hidden;
-//   width: ${(props) => props.width};
-//   height: ${(props) => props.height};
-// `;
-
-const styles = StyleSheet.create({
-  reel: {
-    backgroundColor: 'pink',
-    overflow: 'hidden',
-  },
-});
+const Container = styled.View<{width: number; height: number}>`
+  overflow: hidden;
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
+`;
