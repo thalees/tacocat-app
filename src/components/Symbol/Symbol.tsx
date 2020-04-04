@@ -1,33 +1,19 @@
 import styled from 'styled-components/native';
-import React, {useState} from 'react';
+import React from 'react';
 import {images} from '../../assets/img';
 
 interface SymbolProps {
   symbol: string;
   width: number;
   height: number;
-  key: number;
 }
 
-const getSymbol = (symbol: string) => {
-  switch (symbol) {
-    case 'A':
-      return images.blue;
-    case 'S':
-      return images.black;
-    case 'D':
-      return images.green;
-  }
-};
-
-export const Symbol: React.FC<SymbolProps> = ({key, symbol, width, height}) => {
-  const [imgPath, setImgPath] = useState(getSymbol(symbol));
-
+export const Symbol: React.FC<SymbolProps> = ({symbol, width, height}) => {
+  const imgPath = images.taco;
   return (
-    <Container width={width} height={height} removeClippedSubviews={true}>
+    <Container width={width} height={height}>
       <SymbolImage
         width={width}
-        key={key}
         height={height}
         resizeMode="contain"
         source={imgPath}
@@ -37,6 +23,7 @@ export const Symbol: React.FC<SymbolProps> = ({key, symbol, width, height}) => {
 };
 
 const Container = styled.View<{width: number; height: number}>`
+  background-color: red;
   padding: 5px;
   width: ${(props) => props.width};
   height: ${(props) => props.height};

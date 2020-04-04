@@ -26,6 +26,7 @@ export const ReelSet = forwardRef((pros, ref) => {
           <Reel
             width={reelWidth}
             height={dimensions.height}
+            key={index}
             index={index}
             ref={(ref) => {
               reels.current.push(ref);
@@ -57,7 +58,7 @@ export const ReelSet = forwardRef((pros, ref) => {
 
   return (
     <Container
-      onLayout={(e) => {
+      onLayout={(e): void => {
         onLayout(e);
       }}>
       {dimensions.width && dimensions.height && renderReels()}
