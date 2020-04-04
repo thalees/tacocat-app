@@ -11,8 +11,8 @@ interface ReelProps {
 }
 
 export const Reel = forwardRef((reelProps: ReelProps, ref) => {
-  const reel = useRef();
-  const symbolsStrings = 'SDAASDADASSDSDASDASDAASD';
+  const symbolRefs = useRef([]);
+  const symbolsStrings = Constants.REEL_SYMBOLS[reelProps.index];
 
   const [symbols, setSymbols] = useState({
     reelSymbols: symbolsStrings.repeat(Constants.REELS_REPEAT).split(''),
@@ -25,8 +25,13 @@ export const Reel = forwardRef((reelProps: ReelProps, ref) => {
   const [scrollPosition, setScrollPosition] = useState(
     new Animated.Value(currentScrollPosition),
   );
+
   useImperativeHandle(ref, () => ({
-    scrollByOffset(offset: number) {
+    scrollByOffset(offset: number, callback) {
+      for (let i = 0; i < Constants.SYMBOLS; i++) {
+        symbolRefs.current[position + i].setActive(true);
+      }
+
       currentScrollPosition = currentScrollPosition + symbols.height * offset;
       position = position - offset;
 
@@ -37,19 +42,33 @@ export const Reel = forwardRef((reelProps: ReelProps, ref) => {
         easing: Easing.inOut(Easing.exp),
       }).start(() => {
         position =
-          (Constants.REELS - 2) * symbolsStrings.length +
+          (Constants.REELS_REPEAT - 2) * symbolsStrings.length +
           (position % symbolsStrings.length);
+
+        let results = [];
+        for (let i = 0; i < Constants.SYMBOLS; i++) {
+          symbolRefs.current[position + i].setActive(false);
+          results.push(symbols.reelSymbols[position + i]);
+        }
+
         currentScrollPosition = position * symbols.height * -1;
         scrollPosition.setValue(currentScrollPosition);
+        callback(reelProps.index, results);
       });
     },
     getSymbols() {
       return symbolsStrings;
     },
+    highlightAtIndex(index: number, highlight: boolean) {
+      symbolRefs.current[position + index].setActive(highlight);
+    },
+    shakeAtIndex(index: number) {
+      symbolRefs.current[position + index].shake();
+    },
   }));
 
   return (
-    <Container width={reelProps.width} height={reelProps.height} ref={reel}>
+    <Container width={reelProps.width} height={reelProps.height}>
       <Animated.View
         style={{
           width: reelProps.width,
@@ -60,14 +79,17 @@ export const Reel = forwardRef((reelProps: ReelProps, ref) => {
             },
           ],
         }}>
-        {symbols.reelSymbols.map((element, index) => {
+        {symbols.reelSymbols.map((element, idx) => {
           return (
             <Symbol
               symbol={element}
-              key={index}
-              index={index}
+              key={idx}
+              index={idx}
               width={reelProps.width}
               height={symbols.height}
+              ref={(symbolRef) => {
+                symbolRefs.current[idx] = symbolRef;
+              }}
             />
           );
         })}

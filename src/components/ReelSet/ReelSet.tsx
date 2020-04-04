@@ -6,6 +6,10 @@ import {Reel} from '../Reel/Reel';
 export const ReelSet = forwardRef((pros, ref) => {
   const reels = useRef([]);
 
+  let reelsInMotion = null;
+  let spinResults = [];
+  let winningLines = [];
+
   const [dimensions, setDimensions] = useState({
     width: null,
     height: null,
@@ -27,8 +31,8 @@ export const ReelSet = forwardRef((pros, ref) => {
             width={reelWidth}
             height={dimensions.height}
             index={index}
-            ref={(ref) => {
-              reels.current.push(ref);
+            ref={(reelRef) => {
+              reels.current[index] = reelRef;
             }}
           />
         );
@@ -42,14 +46,87 @@ export const ReelSet = forwardRef((pros, ref) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
+  const highlightWinningLines = (currentIndex: number) => {
+    if (!winningLines.length) {
+      return;
+    }
+
+    if (currentIndex > 0) {
+      Constants.LINES[winningLines[currentIndex - 1]].map((element) => {
+        reels.current[element[0]].highlightAtIndex(element[1], false);
+      });
+    }
+
+    if (currentIndex > winningLines.length - 1) {
+      return;
+    }
+
+    Constants.LINES[winningLines[currentIndex]].map((element) => {
+      reels.current[element[0]].highlightAtIndex(element[1], true);
+      reels.current[element[0]].shakeAtIndex(element[1]);
+    });
+
+    setTimeout(() => {
+      highlightWinningLines(currentIndex + 1);
+    }, 800);
+  };
+
+  const evaluateResults = () => {
+    winningLines = [];
+
+    for (let lineIdx = 0; lineIdx < Constants.LINES.length; lineIdx++) {
+      let streak = 0;
+      let currentKind = null;
+
+      for (
+        let coordIdx = 0;
+        coordIdx < Constants.LINES[lineIdx].length;
+        coordIdx++
+      ) {
+        let coords = Constants.LINES[lineIdx][coordIdx];
+        let symbolAtCoords = spinResults[coords[0]][coords[1]];
+
+        if (coordIdx === 0) {
+          if (symbolAtCoords === 'A') {
+            break;
+          }
+
+          currentKind = symbolAtCoords;
+          streak = 1;
+        } else {
+          if (symbolAtCoords !== currentKind) {
+            break;
+          }
+
+          streak += 1;
+        }
+
+        if (streak >= 3) {
+          winningLines.push(lineIdx);
+        }
+      }
+    }
+
+    highlightWinningLines(0);
+  };
+
   useImperativeHandle(ref, () => ({
     spin() {
+      reelsInMotion = Constants.REELS;
       for (let i = 0; i < Constants.REELS; i++) {
         reels.current[i].scrollByOffset(
           randomBetween(
             (Constants.REELS_REPEAT - 6) * reels.current[i].getSymbols().length,
             (Constants.REELS_REPEAT - 5) * reels.current[i].getSymbols().length,
           ),
+          (reelIndex, results) => {
+            reelsInMotion -= 1;
+            spinResults[reelIndex] = results;
+
+            if (reelsInMotion === 0) {
+              evaluateResults();
+            }
+          },
         );
       }
     },
@@ -67,6 +144,5 @@ export const ReelSet = forwardRef((pros, ref) => {
 
 const Container = styled.View`
   flex: 1;
-  background-color: orange;
   flex-direction: row;
 `;
