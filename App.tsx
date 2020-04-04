@@ -32,13 +32,13 @@ const Container = styled.View`
 const ButtonContainer = styled.View`
   height: 60;
   width: ${Constants.MAX_WIDTH};
-  background-color: purple;
+  background-color: black;
 `;
 
-const PlayContainer = styled.View`
+const PlayContainer = styled.SafeAreaView`
   height: ${Constants.MAX_HEIGHT - 60};
   width: ${Constants.MAX_WIDTH};
-  background-color: blue;
+  background-color: black;
 `;
 
 export default App;
