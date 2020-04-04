@@ -1,9 +1,9 @@
 import styled from 'styled-components/native';
-import React, {useState, useRef} from 'react';
+import React, {useImperativeHandle, useState, forwardRef, useRef} from 'react';
 import {Constants} from '../../../Constants';
 import {Reel} from '../Reel/Reel';
 
-export const ReelSet: React.FC = () => {
+export const ReelSet = forwardRef((pros, ref) => {
   const reels = useRef([]);
 
   const [dimensions, setDimensions] = useState({
@@ -18,10 +18,6 @@ export const ReelSet: React.FC = () => {
     });
   };
 
-  const spin = (): void => {
-    reels.current[0].scrollByOffset(10);
-  };
-
   const renderReels = () => {
     const reelWidth = dimensions.width / Constants.REELS;
     const reelList = Array.apply(null, Array(Constants.REELS)).map(
@@ -32,7 +28,9 @@ export const ReelSet: React.FC = () => {
             height={dimensions.height}
             key={index}
             index={index}
-            ref={reels.current[index]}
+            ref={(ref) => {
+              reels.current.push(ref);
+            }}
           />
         );
       },
@@ -40,6 +38,23 @@ export const ReelSet: React.FC = () => {
 
     return <>{reelList}</>;
   };
+
+  const randomBetween = (max: number, min: number) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  };
+
+  useImperativeHandle(ref, () => ({
+    spin() {
+      for (let i = 0; i < Constants.REELS; i++) {
+        reels.current[i].scrollByOffset(
+          randomBetween(
+            (Constants.REELS_REPEAT - 6) * reels.current[i].getSymbols().length,
+            (Constants.REELS_REPEAT - 5) * reels.current[i].getSymbols().length,
+          ),
+        );
+      }
+    },
+  }));
 
   return (
     <Container
@@ -49,7 +64,7 @@ export const ReelSet: React.FC = () => {
       {dimensions.width && dimensions.height && renderReels()}
     </Container>
   );
-};
+});
 
 const Container = styled.View`
   flex: 1;

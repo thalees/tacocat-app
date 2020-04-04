@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useRef} from 'react';
 import {Button} from 'react-native';
 import styled from 'styled-components/native';
 import {Constants} from './Constants';
 import {ReelSet} from './src/components/ReelSet';
 
 const App = () => {
-  const reel = useState(null);
+  const reel = useRef();
   return (
     <>
       <Container>
