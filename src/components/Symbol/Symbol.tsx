@@ -80,8 +80,8 @@ export const Symbol = forwardRef((symbolProps: SymbolProps, ref) => {
       <AnimatedFastImage
         // eslint-disable-next-line react-native/no-inline-styles
         style={{
-          width: symbolProps.width,
-          height: symbolProps.height,
+          width: symbolProps.width * 0.8,
+          height: symbolProps.height * 0.7,
           opacity: active ? 1 : 0.3,
           transform: symbolAnimation,
         }}
@@ -94,6 +94,7 @@ export const Symbol = forwardRef((symbolProps: SymbolProps, ref) => {
 
 const Container = styled.View<{width: number; height: number}>`
   padding: 5px;
+  flex: 1;
   width: ${(props) => props.width};
   height: ${(props) => props.height};
 `;
