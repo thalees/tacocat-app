@@ -101,5 +101,9 @@ export const Reel = forwardRef((reelProps: ReelProps, ref) => {
 const Container = styled.View<{width: number; height: number}>`
   overflow: hidden;
   width: ${(props) => props.width};
-  height: ${(props) => props.height};
+  height: ${(props) => props.height - 15};
+  background-color: white;
+  margin: 1%;
+  border: 5px solid black;
+  border-radius: 10px;
 `;

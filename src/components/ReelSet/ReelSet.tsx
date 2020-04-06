@@ -23,7 +23,8 @@ export const ReelSet = forwardRef((pros, ref) => {
   };
 
   const renderReels = () => {
-    const reelWidth = dimensions.width / Constants.REELS;
+    const reelWidth =
+      (dimensions.width - dimensions.width * 0.3) / Constants.REELS;
     const reelList = Array.apply(null, Array(Constants.REELS)).map(
       (element, index) => {
         return (
@@ -143,6 +144,8 @@ export const ReelSet = forwardRef((pros, ref) => {
 });
 
 const Container = styled.View`
-  flex: 1;
+  flex: 1 1 auto;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
