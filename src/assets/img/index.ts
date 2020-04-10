@@ -1,7 +1,8 @@
 export const images = {
-  black: require('./taco.png'),
-  blue: require('./dog.png'),
-  green: require('./cat.png'),
+  taco: require('./taco.png'),
+  dog: require('./dog.png'),
+  cat: require('./cat.png'),
+  corona: require('./corona.png'),
   background: require('./background.png'),
   backgroundTopBar: require('./top-bar.png'),
   backgroundBottomBar: require('./bottom-bar.png'),

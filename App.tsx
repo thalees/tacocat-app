@@ -1,11 +1,12 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import styled from 'styled-components/native';
 import {Constants} from './Constants';
-import {ReelSet, SpinButton} from './src/components';
+import {ReelSet, SpinButton, ModalWin} from './src/components';
 import {images} from './src/assets/img';
 
 const App = () => {
   const reel = useRef();
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <>
@@ -18,7 +19,7 @@ const App = () => {
           />
         </TopBar>
         <Main>
-          <ReelSet ref={reel} />
+          <ReelSet ref={reel} setShowModal={setShowModal} />
         </Main>
         <BottomBar>
           <BottomBarBackground
@@ -34,6 +35,7 @@ const App = () => {
           />
         </BottomBar>
       </Container>
+      <ModalWin show={showModal} setShowModal={setShowModal} />
     </>
   );
 };
