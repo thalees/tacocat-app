@@ -14,12 +14,14 @@ interface SymbolProps {
 
 const getSymbol = (symbol: string) => {
   switch (symbol) {
-    case 'A':
-      return images.blue;
-    case 'S':
-      return images.black;
+    case 'C':
+      return images.cat;
     case 'D':
-      return images.green;
+      return images.dog;
+    case 'T':
+      return images.taco;
+    case 'V':
+      return images.corona;
   }
 };
 
