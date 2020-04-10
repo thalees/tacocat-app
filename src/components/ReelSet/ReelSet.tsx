@@ -3,7 +3,11 @@ import React, {useImperativeHandle, useState, forwardRef, useRef} from 'react';
 import {Constants} from '../../../Constants';
 import {Reel} from '../Reel/Reel';
 
-export const ReelSet = forwardRef((pros, ref) => {
+interface ReelSetProps {
+  setShowModal: (value: boolean) => void;
+}
+
+export const ReelSet = forwardRef((reelSetProps: ReelSetProps, ref) => {
   const reels = useRef([]);
 
   let reelsInMotion = null;
@@ -59,6 +63,7 @@ export const ReelSet = forwardRef((pros, ref) => {
     }
 
     if (currentIndex > winningLines.length - 1) {
+      reelSetProps.setShowModal(true);
       return;
     }
 
@@ -88,7 +93,7 @@ export const ReelSet = forwardRef((pros, ref) => {
         let symbolAtCoords = spinResults[coords[0]][coords[1]];
 
         if (coordIdx === 0) {
-          if (symbolAtCoords === 'A') {
+          if (symbolAtCoords === 'C') {
             break;
           }
 
