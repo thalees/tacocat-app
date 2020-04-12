@@ -1,6 +1,10 @@
-# Tacocat App
+# :taco: Tacocat App :cat:
 
 A slot machine app for Android, totally random for college project :).
+
+<p align="center">
+  <img width="700" height="360" src="./src/assets/img/preview.gif">
+</p>
 
 ## Getting Started
 
@@ -16,7 +20,7 @@ These instructions will get you a copy of the project up and running on your loc
 It is very easy to install and upload the application. Just follow the steps below and everything will be fine! :tada:
 
 ```
-git clone https://github.com/thalees/TacocatApp
+git clone https://github.com/thalees/tacocat-app
 yarn install && yarn start
 ```
 
@@ -25,7 +29,7 @@ To run using the emulator just run the following command:
 npx react-native run-android
 ```
 
-If you want to use your cell phone for development, first you need to activate the debugging mode on your cell phone. [See this article]
+If you want to use your cell phone for development, first you need to activate the debugging mode on your cell phone. [See this [article](https://reactnative.dev/docs/running-on-device)]
 
 So just execute the commands below:
 ```
@@ -55,8 +59,8 @@ adb -s device_id reverse tcp:8081 tcp:8081
 
 ## Authors
 
-See the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See the list of [contributors](https://github.com/thalees/tacocat-app/contributors) who participated in this project.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
